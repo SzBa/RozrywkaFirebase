@@ -23,14 +23,24 @@ var firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 //firebase.analytics();
 
-const AppStack = createStackNavigator({
-  Home: HomeScreen,
-});
+const AppStack = createStackNavigator(
+  {
+    Home: HomeScreen,
+  },
+  {
+    headerMode: "none",
+  }
+);
 
-const AuthStack = createStackNavigator({
-  Login: LoginScreen,
-  Register: RegisterScreen,
-});
+const AuthStack = createStackNavigator(
+  {
+    Login: LoginScreen,
+    Register: RegisterScreen,
+  },
+  {
+    headerMode: "none",
+  }
+);
 
 export default createAppContainer(
   createSwitchNavigator(

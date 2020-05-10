@@ -5,10 +5,13 @@ import {
   StyleSheet,
   TextInput,
   TouchableOpacity,
+  StatusBar,
+  KeyboardAvoidingView,
 } from "react-native";
 
+import Logo from "../components/Logo";
 import * as firebase from "firebase";
-
+import Colors from "../constants/colors";
 export default class LoginScreen extends Component {
   state = {
     email: "",
@@ -28,24 +31,29 @@ export default class LoginScreen extends Component {
   render() {
     return (
       <View style={styles.container}>
-        <Text style={styles.greeting}>{`Hello again.\nWelcome back.`}</Text>
-        <View style={styles.errorMessage}>
-          {this.state.errorMessage && (
-            <Text style={styles.error}>{this.state.errorMessage}</Text>
-          )}
-        </View>
+        <KeyboardAvoidingView
+          style={{ flex: 1 }}
+          behavior="position"
+          keyboardVerticalOffset={-60}
+        >
+          <StatusBar backgroundColor={Colors.primary} />
+          <Logo />
+          <View style={styles.errorMessage}>
+            {this.state.errorMessage && (
+              <Text style={styles.error}>{this.state.errorMessage}</Text>
+            )}
+          </View>
 
-        <View style={styles.form}>
-          <View>
+          <View style={styles.form}>
             <Text style={styles.inputTitle}>Email Address</Text>
             <TextInput
               style={styles.input}
               autoCapitalize="none"
+              keyboardType="email-address"
               onChangeText={(email) => this.setState({ email })}
               value={this.state.email}
-            ></TextInput>
-          </View>
-          <View>
+            />
+
             <Text style={styles.inputTitle}>Password</Text>
             <TextInput
               style={styles.input}
@@ -53,23 +61,23 @@ export default class LoginScreen extends Component {
               autoCapitalize="none"
               onChangeText={(password) => this.setState({ password })}
               value={this.state.password}
-            ></TextInput>
+            />
+
+            <TouchableOpacity style={styles.button} onPress={this.handleLogin}>
+              <Text style={styles.buttonText}>Sign in?</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              style={styles.signupButton}
+              onPress={() => this.props.navigation.navigate("Register")}
+            >
+              <Text style={styles.signupButtonText}>
+                New to Social App?
+                <Text style={{ fontWeight: "bold" }}> Sign Up</Text>
+              </Text>
+            </TouchableOpacity>
           </View>
-        </View>
-
-        <TouchableOpacity style={styles.button} onPress={this.handleLogin}>
-          <Text style={{ color: "#fff", fontWeight: "500" }}>Sign in?</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity
-          style={{ alignSelf: "center", marginTop: 32 }}
-          onPress={() => this.props.navigation.navigate("Register")}
-        >
-          <Text>
-            New to Social App?{" "}
-            <Text style={{ fontWeight: "500", color: "#e9446a" }}>Sign Up</Text>
-          </Text>
-        </TouchableOpacity>
+        </KeyboardAvoidingView>
       </View>
     );
   }
@@ -77,48 +85,66 @@ export default class LoginScreen extends Component {
 
 const styles = StyleSheet.create({
   container: {
+    backgroundColor: Colors.accent,
     flex: 1,
   },
-  greeting: {
-    marginTop: 32,
-    fontSize: 18,
-    fontWeight: "400",
-    textAlign: "center",
-  },
   errorMessage: {
-    height: 72,
     alignItems: "center",
     justifyContent: "center",
-    marginHorizontal: 30,
+    marginVertical: 10,
   },
   error: {
     color: "#e9446a",
-    fontSize: 13,
+    fontSize: 16,
     fontWeight: "600",
     textAlign: "center",
+    marginTop: 10,
   },
   form: {
-    marginBottom: 48,
-    marginHorizontal: 30,
+    flex: 1,
+    alignItems: "center",
+    marginTop: 40,
   },
   inputTitle: {
-    color: "#8a8f9e",
-    fontSize: 10,
-    textTransform: "uppercase",
+    justifyContent: "center",
+    alignItems: "center",
+    color: Colors.text,
+    fontSize: 16,
   },
   input: {
-    borderBottomColor: "#8a8f9e",
-    borderBottomWidth: StyleSheet.hairlineWidth,
+    backgroundColor: Colors.textInput,
     height: 40,
-    fontSize: 15,
-    color: "#161f3d",
+    width: 300,
+    fontSize: 18,
+    color: Colors.text,
+    borderRadius: 25,
+    paddingHorizontal: 30,
+    marginVertical: 20,
   },
   button: {
-    marginHorizontal: 30,
-    backgroundColor: "#E9446A",
-    borderRadius: 4,
-    height: 52,
+    width: 300,
+    backgroundColor: Colors.button,
+    height: 40,
+    borderRadius: 25,
+    paddingHorizontal: 30,
+    marginVertical: 10,
     alignItems: "center",
     justifyContent: "center",
+  },
+  buttonText: {
+    fontSize: 18,
+    fontWeight: "500",
+    color: "#fff",
+    textAlign: "center",
+  },
+  signupButton: {
+    height: 20,
+    alignSelf: "center",
+    marginTop: 32,
+  },
+  signupButtonText: {
+    color: "#fff",
+    fontSize: 16,
+    marginBottom: 10,
   },
 });
