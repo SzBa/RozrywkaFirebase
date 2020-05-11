@@ -19,7 +19,7 @@ const styles = StyleSheet.create({
   container: {
     justifyContent: "flex-start",
     alignItems: "center",
-    marginTop: 50,
+    marginTop: 40,
   },
   logoText: {
     marginTop: 15,
