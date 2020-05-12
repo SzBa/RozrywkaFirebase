@@ -5,9 +5,11 @@ import * as firebase from "firebase";
 
 const LoadingScreen = ({ navigation }) => {
   useEffect(() => {
-    firebase.auth().onAuthStateChanged((user) => {
-      navigation.navigate(user ? "App" : "Auth");
-    });
+    setTimeout(() => {
+      firebase.auth().onAuthStateChanged((user) => {
+        navigation.navigate(user ? "App" : "Auth");
+      });
+    }, 3000);
   }, []);
 
   return (

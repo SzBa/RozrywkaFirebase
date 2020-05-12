@@ -1,5 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  StatusBar,
+} from "react-native";
+import Colors from "../constants/colors";
 
 import * as firebase from "firebase";
 
@@ -19,6 +26,7 @@ const HomeScreen = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
+      <StatusBar backgroundColor={Colors.primary} />
       <Text>Hi {fullName}!</Text>
 
       <TouchableOpacity style={{ marginTop: 32 }} onPress={signOutUser}>
