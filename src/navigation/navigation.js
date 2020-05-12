@@ -1,3 +1,5 @@
+import React from "react";
+
 import { createAppContainer, createSwitchNavigator } from "react-navigation";
 import { createStackNavigator } from "react-navigation-stack";
 import { createBottomTabNavigator } from "react-navigation-tabs";
@@ -6,9 +8,71 @@ import LoadingScreen from "../screens/LoadingScreen";
 import LoginScreen from "../screens/LoginScreen";
 import RegisterScreen from "../screens/RegisterScreen";
 import HomeScreen from "../screens/HomeScreen";
+import AddFilmScreen from "../screens/AddFilmScreen";
+import Logout from "../components/Logout";
 
-const AppStack = createBottomTabNavigator({
-  Home: HomeScreen,
+import * as firebase from "firebase";
+
+import { Ionicons } from "@expo/vector-icons";
+import { Alert } from "react-native";
+
+const AppStack = createBottomTabNavigator(
+  {
+    Home: {
+      screen: HomeScreen,
+      navigationOptions: {
+        tabBarIcon: ({ tintColor }) => (
+          <Ionicons name="md-home" size={24} color={tintColor} />
+        ),
+      },
+    },
+    AddItem: {
+      screen: AddFilmScreen,
+      navigationOptions: {
+        tabBarIcon: ({ tintColor }) => (
+          <Ionicons name="md-add-circle" size={24} color={tintColor} />
+        ),
+      },
+    },
+    Logout: {
+      screen: Logout,
+      navigationOptions: {
+        tabBarIcon: ({ tintColor }) => (
+          <Ionicons name="md-log-out" size={24} color={tintColor} />
+        ),
+        tabBarOnPress: () => {
+          Alert.alert(
+            "Are you sure? ",
+            "Don't do this",
+            [
+              {
+                text: "Cancel",
+              },
+              {
+                text: "Yes",
+                onPress: () => {
+                  firebase.auth().signOut();
+                },
+              },
+            ],
+            { cancelable: false }
+          );
+        },
+      },
+    },
+  },
+  {
+    tabBarOptions: {
+      activeTintColor: "orange",
+      inactiveTintColor: "black",
+    },
+  }
+);
+
+const AddItemsStack = createBottomTabNavigator({
+  Film: {
+    screen: AddFilmScreen,
+  },
 });
 
 const AuthStack = createStackNavigator(
@@ -27,6 +91,7 @@ export default createAppContainer(
       Loading: LoadingScreen,
       App: AppStack,
       Auth: AuthStack,
+      AddItems: AddItemsStack,
     },
     {
       initialRouteName: "Loading",
