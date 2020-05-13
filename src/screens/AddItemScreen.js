@@ -7,7 +7,7 @@ import {
   StatusBar,
 } from "react-native";
 
-const AddFilmScreen = () => {
+const AddItemScreen = () => {
   return (
     <View>
       <Text>Sasdas</Text>
@@ -15,4 +15,4 @@ const AddFilmScreen = () => {
   );
 };
 
-export default AddFilmScreen;
+export default AddItemScreen;

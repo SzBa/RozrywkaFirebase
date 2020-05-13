@@ -8,7 +8,7 @@ import LoadingScreen from "../screens/LoadingScreen";
 import LoginScreen from "../screens/LoginScreen";
 import RegisterScreen from "../screens/RegisterScreen";
 import HomeScreen from "../screens/HomeScreen";
-import AddFilmScreen from "../screens/AddFilmScreen";
+import AddItemScreen from "../screens/AddItemScreen";
 import Logout from "../components/Logout";
 
 import * as firebase from "firebase";
@@ -27,10 +27,10 @@ const AppStack = createBottomTabNavigator(
       },
     },
     AddItem: {
-      screen: AddFilmScreen,
+      screen: AddItemScreen,
       navigationOptions: {
         tabBarIcon: ({ tintColor }) => (
-          <Ionicons name="md-add-circle" size={24} color={tintColor} />
+          <Ionicons name="md-add-circle" size={30} color={tintColor} />
         ),
       },
     },
@@ -63,17 +63,19 @@ const AppStack = createBottomTabNavigator(
   },
   {
     tabBarOptions: {
-      activeTintColor: "orange",
+      activeTintColor: "#0032b4",
       inactiveTintColor: "black",
     },
   }
 );
 
+/*
 const AddItemsStack = createBottomTabNavigator({
   Film: {
-    screen: AddFilmScreen,
+    screen: AddItemScreen,
   },
 });
+*/
 
 const AuthStack = createStackNavigator(
   {
@@ -91,7 +93,7 @@ export default createAppContainer(
       Loading: LoadingScreen,
       App: AppStack,
       Auth: AuthStack,
-      AddItems: AddItemsStack,
+      //AddItems: AddItemsStack,
     },
     {
       initialRouteName: "Loading",
