@@ -5,13 +5,14 @@ import {
   StyleSheet,
   TouchableOpacity,
   StatusBar,
-  CheckBox,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { TextInput } from "react-native-gesture-handler";
 import Colors from "../constants/colors";
+import CheckBox from "@react-native-community/checkbox";
 
 const AddItemScreen = ({ navigation }) => {
+  const [toggleCheckBox, setToggleCheckBox] = useState(false);
   return (
     <View style={styles.container}>
       <View style={styles.header}>
@@ -30,27 +31,48 @@ const AddItemScreen = ({ navigation }) => {
 
         <View style={styles.CheckBoxArea}>
           <Text style={styles.text}>Read / Seen / Played</Text>
-          <CheckBox style={styles.CheckBox} checkedIcon="black"></CheckBox>
+          <CheckBox
+            tintColors={{ true: Colors.accent }}
+            style={styles.CheckBox}
+            value={toggleCheckBox}
+            onValueChange={() =>
+              toggleCheckBox
+                ? setToggleCheckBox(false)
+                : setToggleCheckBox(true)
+            }
+          ></CheckBox>
         </View>
       </View>
 
       <View style={styles.CheckBoxArea}>
         <View style={styles.checkBoxType}>
           <Text style={styles.text}>Game</Text>
-          <CheckBox style={styles.checkBoxInCheckArea}></CheckBox>
+          <CheckBox
+            style={styles.checkBoxInCheckArea}
+            tintColors={{ true: Colors.accent }}
+          ></CheckBox>
         </View>
         <View style={styles.checkBoxType}>
           <Text style={styles.text}>Book</Text>
-          <CheckBox style={styles.checkBoxInCheckArea}></CheckBox>
+          <CheckBox
+            style={styles.checkBoxInCheckArea}
+            tintColors={{ true: Colors.accent }}
+          ></CheckBox>
         </View>
         <View style={styles.checkBoxType}>
           <Text style={styles.text}>Movie</Text>
-          <CheckBox style={styles.checkBoxInCheckArea}></CheckBox>
+          <CheckBox
+            style={styles.checkBoxInCheckArea}
+            tintColors={{ true: Colors.accent }}
+          ></CheckBox>
         </View>
 
         <View style={styles.checkBoxType}>
           <Text style={styles.text}>Series</Text>
-          <CheckBox style={styles.checkBoxInCheckArea}></CheckBox>
+          <CheckBox
+            style={styles.checkBoxInCheckArea}
+            tintColors={{ true: Colors.accent }}
+          ></CheckBox>
         </View>
       </View>
     </View>
@@ -63,6 +85,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   header: {
+    backgroundColor: Colors.text,
     flexDirection: "row",
     justifyContent: "space-between",
     paddingHorizontal: 32,
