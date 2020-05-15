@@ -15,11 +15,16 @@ const AddItemScreen = ({ navigation }) => {
   const [bookCheckBox, setBookCheckBox] = useState(false);
   const [movieCheckBox, setMovieCheckBox] = useState(false);
   const [seriesCheckBox, setSeriesCheckBox] = useState(false);
+  const [uid, setUid] = useState("");
+
+  useEffect(() => {
+    setUid(firebase.auth().currentUser.uid);
+  });
 
   const writeUserData = () => {
     firebase
       .database()
-      .ref(Date())
+      .ref("users/" + uid)
       .set({
         title,
         release,

@@ -5,6 +5,7 @@ import {
   StyleSheet,
   TouchableOpacity,
   StatusBar,
+  FlatList,
 } from "react-native";
 import Colors from "../constants/colors";
 import { Ionicons } from "@expo/vector-icons";
@@ -14,11 +15,22 @@ import * as firebase from "firebase";
 const HomeScreen = ({ navigation }) => {
   const [email, setEmail] = useState("");
   const [fullName, setFullName] = useState("");
+  const [uid, setUid] = useState("");
+  const [data, setData] = useState("");
 
   useEffect(() => {
-    const { email, displayName } = firebase.auth().currentUser;
+    const { email, displayName, uid } = firebase.auth().currentUser;
     setEmail(email);
     setFullName(displayName);
+    setUid(uid);
+
+    firebase
+      .database()
+      .ref("users/" + uid)
+      .once("value")
+      .then((response) => {
+        setData(response.val());
+      });
   }, []);
 
   signOutUser = () => {
@@ -31,11 +43,11 @@ const HomeScreen = ({ navigation }) => {
       <View style={styles.header}>
         <Ionicons name="md-home" size={30} color={"black"} />
       </View>
-      <Text style={styles.welcomeText}>Hi {fullName} It's yours library</Text>
 
-      <TouchableOpacity style={{ marginTop: 32 }} onPress={signOutUser}>
-        <Text>Logout</Text>
-      </TouchableOpacity>
+      <View style={styles.welcome}>
+        <Text style={styles.welcomeText}>Hi {fullName} It's yours library</Text>
+      </View>
+      <Text>{data.title}</Text>
     </View>
   );
 };
@@ -53,10 +65,16 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: "grey",
   },
-  welcomeText: {
+  welcome: {
     justifyContent: "center",
     alignItems: "center",
+    marginVertical: 10,
   },
+  welcomeText: {
+    fontSize: 18,
+    fontWeight: "600",
+  },
+  items: {},
 });
 
 export default HomeScreen;
