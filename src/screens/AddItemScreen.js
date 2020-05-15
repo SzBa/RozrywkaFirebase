@@ -25,7 +25,7 @@ const AddItemScreen = ({ navigation }) => {
     firebase
       .database()
       .ref("users/" + uid)
-      .set({
+      .push({
         title,
         release,
         readToggleCheckBox,

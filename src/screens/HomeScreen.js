@@ -6,17 +6,19 @@ import {
   TouchableOpacity,
   StatusBar,
   FlatList,
+  DatePickerAndroid,
 } from "react-native";
 import Colors from "../constants/colors";
 import { Ionicons } from "@expo/vector-icons";
 
 import * as firebase from "firebase";
+import { ListItem } from "react-native-elements";
 
 const HomeScreen = ({ navigation }) => {
   const [email, setEmail] = useState("");
   const [fullName, setFullName] = useState("");
   const [uid, setUid] = useState("");
-  const [data, setData] = useState("");
+  const [data, setData] = useState([]);
 
   useEffect(() => {
     const { email, displayName, uid } = firebase.auth().currentUser;
@@ -47,7 +49,12 @@ const HomeScreen = ({ navigation }) => {
       <View style={styles.welcome}>
         <Text style={styles.welcomeText}>Hi {fullName} It's yours library</Text>
       </View>
-      <Text>{data.title}</Text>
+      <FlatList
+        data={[{ data }]}
+        renderItem={({ item }) => <ListItem title={item.title} />}
+        key={data}
+        keyExtractor={(item) => item.title}
+      />
     </View>
   );
 };
