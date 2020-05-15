@@ -1,18 +1,42 @@
 import React, { useState, useEffect } from "react";
-import {
-  View,
-  Text,
-  StyleSheet,
-  TouchableOpacity,
-  StatusBar,
-} from "react-native";
+import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { TextInput } from "react-native-gesture-handler";
 import Colors from "../constants/colors";
 import CheckBox from "@react-native-community/checkbox";
 
+import * as firebase from "firebase";
+
 const AddItemScreen = ({ navigation }) => {
-  const [toggleCheckBox, setToggleCheckBox] = useState(false);
+  const [title, setTitle] = useState("");
+  const [release, setRelease] = useState("");
+  const [readToggleCheckBox, setReadToggleCheckBox] = useState(false);
+  const [gameCheckBox, setGameCheckBox] = useState(false);
+  const [bookCheckBox, setBookCheckBox] = useState(false);
+  const [movieCheckBox, setMovieCheckBox] = useState(false);
+  const [seriesCheckBox, setSeriesCheckBox] = useState(false);
+
+  const writeUserData = () => {
+    firebase
+      .database()
+      .ref(Date())
+      .set({
+        title,
+        release,
+        readToggleCheckBox,
+        gameCheckBox,
+        bookCheckBox,
+        movieCheckBox,
+        seriesCheckBox,
+      })
+      .then((data) => {
+        console.log("Ciekawe czy działa, data: ", data);
+      })
+      .catch((error) => {
+        console.log("error", error);
+      });
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.header}>
@@ -20,25 +44,35 @@ const AddItemScreen = ({ navigation }) => {
           <Ionicons name="md-arrow-back" size={30} color={"black"} />
         </TouchableOpacity>
         <TouchableOpacity>
-          <Text style={styles.headerAddItem}>Add Item</Text>
+          <Text style={styles.headerAddItem} onPress={() => writeUserData()}>
+            Add Item
+          </Text>
         </TouchableOpacity>
       </View>
       <View style={styles.inputContainer}>
         <Text style={styles.text}>Title</Text>
-        <TextInput style={styles.input}></TextInput>
+        <TextInput
+          style={styles.input}
+          onChangeText={(title) => setTitle(title)}
+          value={title}
+        ></TextInput>
         <Text style={styles.text}>Release</Text>
-        <TextInput style={styles.input}></TextInput>
+        <TextInput
+          style={styles.input}
+          onChangeText={(release) => setRelease(release)}
+          value={release}
+        ></TextInput>
 
         <View style={styles.CheckBoxArea}>
           <Text style={styles.text}>Read / Seen / Played</Text>
           <CheckBox
             tintColors={{ true: Colors.accent }}
             style={styles.CheckBox}
-            value={toggleCheckBox}
+            value={readToggleCheckBox}
             onValueChange={() =>
-              toggleCheckBox
-                ? setToggleCheckBox(false)
-                : setToggleCheckBox(true)
+              readToggleCheckBox
+                ? setReadToggleCheckBox(false)
+                : setReadToggleCheckBox(true)
             }
           ></CheckBox>
         </View>
@@ -50,6 +84,10 @@ const AddItemScreen = ({ navigation }) => {
           <CheckBox
             style={styles.checkBoxInCheckArea}
             tintColors={{ true: Colors.accent }}
+            value={gameCheckBox}
+            onValueChange={() =>
+              gameCheckBox ? setGameCheckBox(false) : setGameCheckBox(true)
+            }
           ></CheckBox>
         </View>
         <View style={styles.checkBoxType}>
@@ -57,6 +95,10 @@ const AddItemScreen = ({ navigation }) => {
           <CheckBox
             style={styles.checkBoxInCheckArea}
             tintColors={{ true: Colors.accent }}
+            value={bookCheckBox}
+            onValueChange={() =>
+              bookCheckBox ? setBookCheckBox(false) : setBookCheckBox(true)
+            }
           ></CheckBox>
         </View>
         <View style={styles.checkBoxType}>
@@ -64,6 +106,10 @@ const AddItemScreen = ({ navigation }) => {
           <CheckBox
             style={styles.checkBoxInCheckArea}
             tintColors={{ true: Colors.accent }}
+            value={movieCheckBox}
+            onValueChange={() =>
+              movieCheckBox ? setMovieCheckBox(false) : setMovieCheckBox(true)
+            }
           ></CheckBox>
         </View>
 
@@ -72,6 +118,12 @@ const AddItemScreen = ({ navigation }) => {
           <CheckBox
             style={styles.checkBoxInCheckArea}
             tintColors={{ true: Colors.accent }}
+            value={seriesCheckBox}
+            onValueChange={() =>
+              seriesCheckBox
+                ? setSeriesCheckBox(false)
+                : setSeriesCheckBox(true)
+            }
           ></CheckBox>
         </View>
       </View>
@@ -122,7 +174,7 @@ const styles = StyleSheet.create({
   CheckBoxArea: {
     justifyContent: "center",
     alignItems: "center",
-    paddingVertical: 30,
+    marginVertical: 30,
     flexDirection: "row",
   },
   CheckBox: {

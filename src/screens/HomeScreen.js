@@ -7,6 +7,7 @@ import {
   StatusBar,
 } from "react-native";
 import Colors from "../constants/colors";
+import { Ionicons } from "@expo/vector-icons";
 
 import * as firebase from "firebase";
 
@@ -27,7 +28,10 @@ const HomeScreen = ({ navigation }) => {
   return (
     <View style={styles.container}>
       <StatusBar backgroundColor={Colors.primary} />
-      <Text>Hi {fullName}!</Text>
+      <View style={styles.header}>
+        <Ionicons name="md-home" size={30} color={"black"} />
+      </View>
+      <Text style={styles.welcomeText}>Hi {fullName} It's yours library</Text>
 
       <TouchableOpacity style={{ marginTop: 32 }} onPress={signOutUser}>
         <Text>Logout</Text>
@@ -39,6 +43,17 @@ const HomeScreen = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+  },
+  header: {
+    backgroundColor: Colors.text,
+    flexDirection: "row",
+    justifyContent: "space-between",
+    paddingHorizontal: 32,
+    paddingVertical: 12,
+    borderBottomWidth: 1,
+    borderBottomColor: "grey",
+  },
+  welcomeText: {
     justifyContent: "center",
     alignItems: "center",
   },
