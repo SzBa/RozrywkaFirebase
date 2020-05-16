@@ -29,9 +29,16 @@ const HomeScreen = ({ navigation }) => {
     firebase
       .database()
       .ref("users/" + uid)
-      .once("value")
-      .then((response) => {
-        setData(response.val());
+      .once("value", function (snapshot) {
+        snapshot.forEach(function (childSnapshot) {
+          var childKey = childSnapshot.key;
+          var childData = childSnapshot.val();
+          setData([childData, childKey]);
+          console.log("jestem");
+          console.log("jestem: ", childData);
+          console.log("jestem: ", childKey);
+          // ...
+        });
       });
   }, []);
 
@@ -49,11 +56,15 @@ const HomeScreen = ({ navigation }) => {
       <View style={styles.welcome}>
         <Text style={styles.welcomeText}>Hi {fullName} It's yours library</Text>
       </View>
+      <Text>{data?.title}</Text>
       <FlatList
-        data={[{ data }]}
-        renderItem={({ item }) => <ListItem title={item.title} />}
-        key={data}
-        keyExtractor={(item) => item.title}
+        data={[data]}
+        keyExtractor={(index) => index}
+        renderItem={({ item }) => (
+          <View>
+            <Text>Tytul: {[item.data]}</Text>
+          </View>
+        )}
       />
     </View>
   );
