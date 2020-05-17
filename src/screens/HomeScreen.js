@@ -6,7 +6,7 @@ import {
   TouchableOpacity,
   StatusBar,
   FlatList,
-  DatePickerAndroid,
+  ScrollView,
 } from "react-native";
 import Colors from "../constants/colors";
 import { Ionicons } from "@expo/vector-icons";
@@ -28,17 +28,17 @@ const HomeScreen = ({ navigation }) => {
 
     firebase
       .database()
-      .ref("users/" + uid)
-      .once("value", function (snapshot) {
-        snapshot.forEach(function (childSnapshot) {
-          var childKey = childSnapshot.key;
-          var childData = childSnapshot.val();
-          setData([childData, childKey]);
-          console.log("jestem");
-          console.log("jestem: ", childData);
-          console.log("jestem: ", childKey);
-          // ...
+      .ref("users")
+      .child(uid)
+      .on("value", (response) => {
+        const info = [];
+        response.forEach((item) => {
+          info.push({
+            info: item.val(),
+            key: item.key,
+          });
         });
+        setData(info);
       });
   }, []);
 
@@ -56,16 +56,20 @@ const HomeScreen = ({ navigation }) => {
       <View style={styles.welcome}>
         <Text style={styles.welcomeText}>Hi {fullName} It's yours library</Text>
       </View>
-      <Text>{data?.title}</Text>
-      <FlatList
-        data={[data]}
-        keyExtractor={(index) => index}
-        renderItem={({ item }) => (
-          <View>
-            <Text>Tytul: {[item.data]}</Text>
-          </View>
-        )}
-      />
+      <View style={styles.itemList}>
+        <FlatList
+          data={data}
+          keyExtractor={(item, index) => index.toString()}
+          renderItem={({ item }) => (
+            <View>
+              <Text>
+                Author: {item.info.title} Tag: {item.info.release}
+              </Text>
+              <Text>Title: {item.info.title}</Text>
+            </View>
+          )}
+        />
+      </View>
     </View>
   );
 };
@@ -92,7 +96,10 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: "600",
   },
-  items: {},
+  itemList: {
+    marginVertical: 20,
+    backgroundColor: "orange",
+  },
 });
 
 export default HomeScreen;
