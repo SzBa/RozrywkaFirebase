@@ -41,8 +41,12 @@ const HomeScreen = ({ navigation }) => {
       });
   }, []);
 
-  const deleteItem = () => {
-    firebase.database().ref("users").child(uid).info.remove();
+  const deleteItem = (key) => {
+    firebase
+      .database()
+      .ref("users/" + uid)
+      .child(key)
+      .remove();
   };
 
   signOutUser = () => {
@@ -67,7 +71,7 @@ const HomeScreen = ({ navigation }) => {
             data={data}
             keyExtractor={(item, index) => index.toString()}
             renderItem={({ item }) => (
-              <TouchableOpacity onPress={deleteItem}>
+              <TouchableOpacity onPress={() => deleteItem(item.key)}>
                 <View style={styles.row}>
                   {item.info.gameCheckBox ? (
                     <Text style={styles.rowText}>
