@@ -12,7 +12,6 @@ import Colors from "../constants/colors";
 import { Ionicons } from "@expo/vector-icons";
 
 import * as firebase from "firebase";
-import { ListItem } from "react-native-elements";
 
 const HomeScreen = ({ navigation }) => {
   const [email, setEmail] = useState("");
@@ -42,6 +41,10 @@ const HomeScreen = ({ navigation }) => {
       });
   }, []);
 
+  const deleteItem = () => {
+    firebase.database().ref("users").child(uid).info.remove();
+  };
+
   signOutUser = () => {
     firebase.auth().signOut();
   };
@@ -50,25 +53,59 @@ const HomeScreen = ({ navigation }) => {
     <View style={styles.container}>
       <StatusBar backgroundColor={Colors.primary} />
       <View style={styles.header}>
-        <Ionicons name="md-home" size={30} color={"black"} />
+        <Ionicons name="md-home" size={40} color={"black"} />
+        <View style={styles.welcome}>
+          <Text style={styles.welcomeText}>
+            Hi {fullName} It's yours library
+          </Text>
+        </View>
       </View>
 
-      <View style={styles.welcome}>
-        <Text style={styles.welcomeText}>Hi {fullName} It's yours library</Text>
-      </View>
-      <View style={styles.itemList}>
-        <FlatList
-          data={data}
-          keyExtractor={(item, index) => index.toString()}
-          renderItem={({ item }) => (
-            <View>
-              <Text>
-                Author: {item.info.title} Tag: {item.info.release}
-              </Text>
-              <Text>Title: {item.info.title}</Text>
-            </View>
-          )}
-        />
+      <View style={styles.flatListContainer}>
+        <ScrollView>
+          <FlatList
+            data={data}
+            keyExtractor={(item, index) => index.toString()}
+            renderItem={({ item }) => (
+              <TouchableOpacity onPress={deleteItem}>
+                <View style={styles.row}>
+                  {item.info.gameCheckBox ? (
+                    <Text style={styles.rowText}>
+                      Game <Ionicons name="logo-playstation" size={20} />
+                    </Text>
+                  ) : null}
+                  {item.info.movieCheckBox ? (
+                    <Text style={styles.rowText}>
+                      Movie <Ionicons name="md-videocam" size={20} />
+                    </Text>
+                  ) : null}
+                  {item.info.bookCheckBox ? (
+                    <Text style={styles.rowText}>
+                      Book <Ionicons name="md-book" size={20} />
+                    </Text>
+                  ) : null}
+                  {item.info.seriesCheckBox ? (
+                    <Text style={styles.rowText}>
+                      Serial <Ionicons name="md-bookmarks" size={20} />
+                    </Text>
+                  ) : null}
+                  <Text style={styles.rowText}>Title: {item.info.title}</Text>
+                  <Text style={styles.rowText}>
+                    Release: {item.info.release}
+                  </Text>
+                  <Text style={styles.rowText}>
+                    Read/Seen/Played:{" "}
+                    {item.info.readToggleCheckBox ? (
+                      <Ionicons name="md-checkbox" size={20} color={"green"} />
+                    ) : (
+                      <Ionicons name="md-close" size={20} color={"red"} />
+                    )}
+                  </Text>
+                </View>
+              </TouchableOpacity>
+            )}
+          />
+        </ScrollView>
       </View>
     </View>
   );
@@ -77,28 +114,37 @@ const HomeScreen = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: Colors.backgroundColorAdd,
   },
   header: {
     backgroundColor: Colors.text,
     flexDirection: "row",
-    justifyContent: "space-between",
-    paddingHorizontal: 32,
-    paddingVertical: 12,
+    justifyContent: "space-around",
+    paddingHorizontal: 12,
+    paddingVertical: 10,
     borderBottomWidth: 1,
     borderBottomColor: "grey",
   },
   welcome: {
     justifyContent: "center",
     alignItems: "center",
-    marginVertical: 10,
   },
   welcomeText: {
-    fontSize: 18,
-    fontWeight: "600",
+    fontSize: 22,
+    fontWeight: "700",
   },
-  itemList: {
-    marginVertical: 20,
-    backgroundColor: "orange",
+  flatListContainer: {
+    paddingBottom: 62,
+  },
+  row: {
+    paddingLeft: 25,
+    flex: 1,
+    paddingVertical: 10,
+    borderBottomColor: "black",
+    borderBottomWidth: 1,
+  },
+  rowText: {
+    fontSize: 18,
   },
 });
 

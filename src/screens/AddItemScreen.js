@@ -48,10 +48,8 @@ const AddItemScreen = ({ navigation }) => {
         <TouchableOpacity onPress={() => navigation.navigate("Home")}>
           <Ionicons name="md-arrow-back" size={30} color={"black"} />
         </TouchableOpacity>
-        <TouchableOpacity>
-          <Text style={styles.headerAddItem} onPress={() => writeUserData()}>
-            Add Item
-          </Text>
+        <TouchableOpacity onPress={() => writeUserData()}>
+          <Text style={styles.headerAddItem}>Add Item</Text>
         </TouchableOpacity>
       </View>
       <View style={styles.inputContainer}>
@@ -63,6 +61,7 @@ const AddItemScreen = ({ navigation }) => {
         ></TextInput>
         <Text style={styles.text}>Release</Text>
         <TextInput
+          keyboardType={"numeric"}
           style={styles.input}
           onChangeText={(release) => setRelease(release)}
           value={release}
@@ -151,7 +150,7 @@ const styles = StyleSheet.create({
     borderBottomColor: "grey",
   },
   headerAddItem: {
-    fontWeight: "500",
+    fontWeight: "700",
     fontSize: 24,
   },
   inputContainer: {
