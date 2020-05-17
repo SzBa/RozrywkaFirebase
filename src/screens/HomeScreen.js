@@ -7,6 +7,9 @@ import {
   StatusBar,
   FlatList,
   ScrollView,
+  Alert,
+  TextInput,
+  KeyboardAvoidingView,
 } from "react-native";
 import Colors from "../constants/colors";
 import { Ionicons } from "@expo/vector-icons";
@@ -18,13 +21,18 @@ const HomeScreen = ({ navigation }) => {
   const [fullName, setFullName] = useState("");
   const [uid, setUid] = useState("");
   const [data, setData] = useState([]);
+  const [itemsList, setItemsList] = useState([]);
+  const [searchWorld, setSearchWorld] = useState("");
 
   useEffect(() => {
     const { email, displayName, uid } = firebase.auth().currentUser;
     setEmail(email);
     setFullName(displayName);
     setUid(uid);
+    getDateFromFirebase(uid);
+  }, []);
 
+  const getDateFromFirebase = (uid) => {
     firebase
       .database()
       .ref("users")
@@ -38,8 +46,29 @@ const HomeScreen = ({ navigation }) => {
           });
         });
         setData(info);
+        setItemsList(info);
       });
-  }, []);
+  };
+
+  const searchItem = () => {
+    if (searchWorld === "") {
+      setData(itemsList);
+    } else {
+      let temp = [];
+      itemsList.forEach((item) => {
+        if (
+          item.info.title.toLowerCase().includes(searchWorld.toLowerCase()) ||
+          item.info.release.toLowerCase().includes(searchWorld.toLowerCase())
+        ) {
+          temp.push({
+            info: item.info,
+            key: item.key,
+          });
+        }
+      });
+      setData(temp);
+    }
+  };
 
   const deleteItem = (key) => {
     firebase
@@ -65,13 +94,45 @@ const HomeScreen = ({ navigation }) => {
         </View>
       </View>
 
+      <View style={styles.searchArea}>
+        <Ionicons style={styles.searchIcon} name="md-search" size={28} />
+        <TextInput
+          style={styles.searchInput}
+          placeholder="Search..."
+          autoCapitalize="none"
+          onChangeText={(filter) => setSearchWorld(filter)}
+          onSubmitEditing={searchItem}
+          onKeyPress={searchItem}
+          value={searchWorld}
+        ></TextInput>
+      </View>
+
       <View style={styles.flatListContainer}>
         <ScrollView>
           <FlatList
             data={data}
             keyExtractor={(item, index) => index.toString()}
             renderItem={({ item }) => (
-              <TouchableOpacity onPress={() => deleteItem(item.key)}>
+              <TouchableOpacity
+                onLongPress={() => {
+                  Alert.alert(
+                    "Are you sure? ",
+                    "You delete this item",
+                    [
+                      {
+                        text: "Cancel",
+                      },
+                      {
+                        text: "Yes",
+                        onPress: () => {
+                          deleteItem(item.key);
+                        },
+                      },
+                    ],
+                    { cancelable: false }
+                  );
+                }}
+              >
                 <View style={styles.row}>
                   {item.info.gameCheckBox ? (
                     <Text style={styles.rowText}>
@@ -90,7 +151,7 @@ const HomeScreen = ({ navigation }) => {
                   ) : null}
                   {item.info.seriesCheckBox ? (
                     <Text style={styles.rowText}>
-                      Serial <Ionicons name="md-bookmarks" size={20} />
+                      Series <Ionicons name="md-bookmarks" size={20} />
                     </Text>
                   ) : null}
                   <Text style={styles.rowText}>Title: {item.info.title}</Text>
@@ -138,17 +199,29 @@ const styles = StyleSheet.create({
     fontWeight: "700",
   },
   flatListContainer: {
-    paddingBottom: 62,
+    paddingBottom: 115,
   },
   row: {
     paddingLeft: 25,
     flex: 1,
     paddingVertical: 10,
-    borderBottomColor: "black",
-    borderBottomWidth: 1,
+    borderTopWidth: 1,
   },
   rowText: {
     fontSize: 18,
+  },
+  searchArea: {
+    flexDirection: "row",
+  },
+  searchInput: {
+    height: 50,
+    paddingLeft: 20,
+    fontSize: 22,
+    color: Colors.textAdd,
+  },
+  searchIcon: {
+    paddingLeft: 30,
+    marginVertical: 10,
   },
 });
 
