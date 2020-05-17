@@ -4,4 +4,6 @@ export default {
   textInput: "#6f77c6",
   text: "#fff",
   button: "#010d79",
+  textAdd: "#000",
+  backgroundColorAdd: "#DCDCDC",
 };

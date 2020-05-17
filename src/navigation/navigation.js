@@ -69,14 +69,6 @@ const AppStack = createBottomTabNavigator(
   }
 );
 
-/*
-const AddItemsStack = createBottomTabNavigator({
-  Film: {
-    screen: AddItemScreen,
-  },
-});
-*/
-
 const AuthStack = createStackNavigator(
   {
     Login: LoginScreen,
@@ -93,7 +85,6 @@ export default createAppContainer(
       Loading: LoadingScreen,
       App: AppStack,
       Auth: AuthStack,
-      //AddItems: AddItemsStack,
     },
     {
       initialRouteName: "Loading",

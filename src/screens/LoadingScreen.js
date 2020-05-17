@@ -9,7 +9,7 @@ const LoadingScreen = ({ navigation }) => {
       firebase.auth().onAuthStateChanged((user) => {
         navigation.navigate(user ? "App" : "Auth");
       });
-    }, 2000);
+    }, 1000);
   }, []);
 
   return (
