@@ -42,13 +42,28 @@ const AddItemScreen = ({ navigation }) => {
       });
   };
 
+  const clearTextInput = () => {
+    setTitle("");
+    setRelease("");
+    setReadToggleCheckBox(false);
+    setGameCheckBox(false);
+    setBookCheckBox(false);
+    setMovieCheckBox(false);
+    setSeriesCheckBox(false);
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.header}>
         <TouchableOpacity onPress={() => navigation.navigate("Home")}>
           <Ionicons name="md-arrow-back" size={30} color={"black"} />
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => writeUserData()}>
+        <TouchableOpacity
+          onPress={() => {
+            writeUserData();
+            clearTextInput();
+          }}
+        >
           <Text style={styles.headerAddItem}>Add Item</Text>
         </TouchableOpacity>
       </View>
@@ -66,7 +81,6 @@ const AddItemScreen = ({ navigation }) => {
           onChangeText={(release) => setRelease(release)}
           value={release}
         ></TextInput>
-
         <View style={styles.CheckBoxArea}>
           <Text style={styles.text}>Read / Seen / Played</Text>
           <CheckBox
@@ -81,7 +95,6 @@ const AddItemScreen = ({ navigation }) => {
           ></CheckBox>
         </View>
       </View>
-
       <View style={styles.CheckBoxArea}>
         <View style={styles.checkBoxType}>
           <Text style={styles.text}>Game</Text>
@@ -116,7 +129,6 @@ const AddItemScreen = ({ navigation }) => {
             }
           ></CheckBox>
         </View>
-
         <View style={styles.checkBoxType}>
           <Text style={styles.text}>Series</Text>
           <CheckBox

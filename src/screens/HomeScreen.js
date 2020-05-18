@@ -1,19 +1,9 @@
 import React, { useState, useEffect } from "react";
-import {
-  View,
-  Text,
-  StyleSheet,
-  TouchableOpacity,
-  StatusBar,
-  FlatList,
-  ScrollView,
-  Alert,
-  TextInput,
-  KeyboardAvoidingView,
-} from "react-native";
+import { View, Text, StyleSheet, StatusBar, TextInput } from "react-native";
 import Colors from "../constants/colors";
 import { Ionicons } from "@expo/vector-icons";
 
+import ItemsList from "../components/ItemsList";
 import * as firebase from "firebase";
 
 const HomeScreen = ({ navigation }) => {
@@ -70,14 +60,6 @@ const HomeScreen = ({ navigation }) => {
     }
   };
 
-  const deleteItem = (key) => {
-    firebase
-      .database()
-      .ref("users/" + uid)
-      .child(key)
-      .remove();
-  };
-
   signOutUser = () => {
     firebase.auth().signOut();
   };
@@ -93,7 +75,6 @@ const HomeScreen = ({ navigation }) => {
           </Text>
         </View>
       </View>
-
       <View style={styles.searchArea}>
         <Ionicons style={styles.searchIcon} name="md-search" size={28} />
         <TextInput
@@ -106,72 +87,7 @@ const HomeScreen = ({ navigation }) => {
           value={searchWorld}
         ></TextInput>
       </View>
-
-      <View style={styles.flatListContainer}>
-        <ScrollView>
-          <FlatList
-            data={data}
-            keyExtractor={(item, index) => index.toString()}
-            renderItem={({ item }) => (
-              <TouchableOpacity
-                onLongPress={() => {
-                  Alert.alert(
-                    "Are you sure? ",
-                    "You delete this item",
-                    [
-                      {
-                        text: "Cancel",
-                      },
-                      {
-                        text: "Yes",
-                        onPress: () => {
-                          deleteItem(item.key);
-                        },
-                      },
-                    ],
-                    { cancelable: false }
-                  );
-                }}
-              >
-                <View style={styles.row}>
-                  {item.info.gameCheckBox ? (
-                    <Text style={styles.rowText}>
-                      Game <Ionicons name="logo-playstation" size={20} />
-                    </Text>
-                  ) : null}
-                  {item.info.movieCheckBox ? (
-                    <Text style={styles.rowText}>
-                      Movie <Ionicons name="md-videocam" size={20} />
-                    </Text>
-                  ) : null}
-                  {item.info.bookCheckBox ? (
-                    <Text style={styles.rowText}>
-                      Book <Ionicons name="md-book" size={20} />
-                    </Text>
-                  ) : null}
-                  {item.info.seriesCheckBox ? (
-                    <Text style={styles.rowText}>
-                      Series <Ionicons name="md-bookmarks" size={20} />
-                    </Text>
-                  ) : null}
-                  <Text style={styles.rowText}>Title: {item.info.title}</Text>
-                  <Text style={styles.rowText}>
-                    Release: {item.info.release}
-                  </Text>
-                  <Text style={styles.rowText}>
-                    Read/Seen/Played:{" "}
-                    {item.info.readToggleCheckBox ? (
-                      <Ionicons name="md-checkbox" size={20} color={"green"} />
-                    ) : (
-                      <Ionicons name="md-close" size={20} color={"red"} />
-                    )}
-                  </Text>
-                </View>
-              </TouchableOpacity>
-            )}
-          />
-        </ScrollView>
-      </View>
+      <ItemsList data={data} uid={uid} />
     </View>
   );
 };
@@ -197,18 +113,6 @@ const styles = StyleSheet.create({
   welcomeText: {
     fontSize: 22,
     fontWeight: "700",
-  },
-  flatListContainer: {
-    paddingBottom: 115,
-  },
-  row: {
-    paddingLeft: 25,
-    flex: 1,
-    paddingVertical: 10,
-    borderTopWidth: 1,
-  },
-  rowText: {
-    fontSize: 18,
   },
   searchArea: {
     flexDirection: "row",

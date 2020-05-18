@@ -6,7 +6,6 @@ import * as firebase from "firebase";
 
 export default function App() {
   const firebaseConfig = FirebaseConfig;
-  // Initialize Firebase
   !firebase.apps.length
     ? firebase.initializeApp(firebaseConfig)
     : firebase.app();
